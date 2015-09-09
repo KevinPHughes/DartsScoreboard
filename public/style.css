@@ -1,21 +1,25 @@
-[ng\:cloak], [ng-cloak], .ng-cloak {
-    display: none !important;
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak {
+  display: none !important;
 }
-
 .table {
-    text-align: center;
+  text-align: center;
 }
-
 .table th {
-    text-align: center;
+  text-align: center;
 }
-
 .turn {
-    font-style: italic;
-    text-decoration: underline;
+  font-style: italic;
+  text-decoration: underline;
 }
-
 .closed {
-    background-color: rgba(36, 109, 33, 0.33);
-    color: #FFF;
+  background-color: rgba(36, 109, 33, 0.33);
+  color: #FFF;
+}
+.footer {
+  text-align: center;
+}
+.footer span {
+  margin-right: 2em;
 }

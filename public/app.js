@@ -31245,11 +31245,15 @@ var _;
 _ = require('underscore');
 
 module.exports = function() {
-  var switchPlayerIfNecessary;
+  var generateAlert, switchPlayerIfNecessary;
   this.board = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '50'];
   this.points = {
     1: 301,
     2: 301
+  };
+  this.alerts = {
+    1: [],
+    2: []
   };
   this.activePlayer = 1;
   this.shotsLeft = 3;
@@ -31257,6 +31261,7 @@ module.exports = function() {
     return function(position, valueOfShot) {
       var originalScore;
       originalScore = _this.points[_this.activePlayer];
+      generateAlert(position, valueOfShot);
       while (valueOfShot > 0) {
         _this.points[_this.activePlayer] -= parseInt(position);
         valueOfShot -= 1;
@@ -31281,6 +31286,7 @@ module.exports = function() {
   switchPlayerIfNecessary = (function(_this) {
     return function() {
       if (_this.shotsLeft === 0) {
+        _this.alerts[_this.activePlayer] = [];
         if (_this.activePlayer === 1) {
           _this.activePlayer = 2;
         } else {
@@ -31288,6 +31294,19 @@ module.exports = function() {
         }
         return _this.shotsLeft = 3;
       }
+    };
+  })(this);
+  generateAlert = (function(_this) {
+    return function(position, valueOfShot) {
+      var valueOfShotDescription;
+      valueOfShotDescription = "";
+      if (valueOfShot === 2) {
+        valueOfShotDescription = "Double ";
+      }
+      if (valueOfShot === 3) {
+        valueOfShotDescription = "Triple ";
+      }
+      return _this.alerts[_this.activePlayer].push(valueOfShotDescription + position);
     };
   })(this);
   return this;

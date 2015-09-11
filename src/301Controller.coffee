@@ -16,19 +16,18 @@ module.exports = () ->
     @shotsLeft = 3
     @round = 1
 
-    @score = (position, valueOfShot, isUndoingShot) =>
-      originalScore = @points[@activePlayer]
+    @score = (position, valueOfShot) =>
       shotDescription = generateAlert(position, valueOfShot)
-      unless isUndoingShot
-        shot = {position: position, valueOfShot: valueOfShot, player: @activePlayer, round: @round, description: shotDescription}
-        @shotHistory.push(shot)
+
+      shot = {position: position, valueOfShot: valueOfShot, player: @activePlayer, round: @round, description: shotDescription}
+      @shotHistory.push(shot)
 
       while valueOfShot > 0
         @points[@activePlayer] -= parseInt(position)
         valueOfShot -= 1
 
       if @points[@activePlayer] < 0
-        @points[@activePlayer] = originalScore
+        @points[@activePlayer] = @originalScoreForRound
         return @endTurn()
 
       if @points[@activePlayer] == 0
@@ -69,6 +68,7 @@ module.exports = () ->
           @round += 1
         @alerts[@activePlayer] = []
         @shotsLeft = 3
+        @originalScoreForRound = @points[@activePlayer]
 
     generateAlert = (position, valueOfShot) =>
       shotDescription = ""

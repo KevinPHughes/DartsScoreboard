@@ -31246,7 +31246,6 @@ _ = require('underscore');
 
 module.exports = function() {
   var generateAlert, switchPlayerIfNecessary;
-  this.board = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '50'];
   this.points = {
     1: 301,
     2: 301
@@ -31255,13 +31254,25 @@ module.exports = function() {
     1: [],
     2: []
   };
+  this.shotHistory = [];
   this.activePlayer = 1;
   this.shotsLeft = 3;
+  this.round = 1;
   this.score = (function(_this) {
-    return function(position, valueOfShot) {
-      var originalScore;
+    return function(position, valueOfShot, isUndoingShot) {
+      var originalScore, shot, shotDescription;
       originalScore = _this.points[_this.activePlayer];
-      generateAlert(position, valueOfShot);
+      shotDescription = generateAlert(position, valueOfShot);
+      if (!isUndoingShot) {
+        shot = {
+          position: position,
+          valueOfShot: valueOfShot,
+          player: _this.activePlayer,
+          round: _this.round,
+          description: shotDescription
+        };
+        _this.shotHistory.push(shot);
+      }
       while (valueOfShot > 0) {
         _this.points[_this.activePlayer] -= parseInt(position);
         valueOfShot -= 1;
@@ -31283,30 +31294,53 @@ module.exports = function() {
       return switchPlayerIfNecessary();
     };
   })(this);
+  this.undoShot = (function(_this) {
+    return function() {
+      var alertsToDisplay, lastShot;
+      lastShot = _this.shotHistory.pop();
+      if (lastShot.player !== _this.activePlayer) {
+        _this.activePlayer = lastShot.player;
+        _this.shotsLeft = 1;
+        if (_this.alerts[_this.activePlayer].length === 0) {
+          alertsToDisplay = _this.shotHistory.slice(Math.max(_this.shotHistory.length - 2));
+          _.each(alertsToDisplay, function(shot) {
+            return _this.alerts[_this.activePlayer].push(shot.description);
+          });
+        }
+      } else {
+        _this.shotsLeft += 1;
+      }
+      _this.alerts[_this.activePlayer].pop();
+      return _this.points[_this.activePlayer] += lastShot.position * lastShot.valueOfShot;
+    };
+  })(this);
   switchPlayerIfNecessary = (function(_this) {
     return function() {
       if (_this.shotsLeft === 0) {
-        _this.alerts[_this.activePlayer] = [];
         if (_this.activePlayer === 1) {
           _this.activePlayer = 2;
         } else {
           _this.activePlayer = 1;
+          _this.round += 1;
         }
+        _this.alerts[_this.activePlayer] = [];
         return _this.shotsLeft = 3;
       }
     };
   })(this);
   generateAlert = (function(_this) {
     return function(position, valueOfShot) {
-      var valueOfShotDescription;
-      valueOfShotDescription = "";
+      var shotDescription;
+      shotDescription = "";
       if (valueOfShot === 2) {
-        valueOfShotDescription = "Double ";
+        shotDescription = "Double ";
       }
       if (valueOfShot === 3) {
-        valueOfShotDescription = "Triple ";
+        shotDescription = "Triple ";
       }
-      return _this.alerts[_this.activePlayer].push(valueOfShotDescription + position);
+      shotDescription += position;
+      _this.alerts[_this.activePlayer].push(shotDescription);
+      return shotDescription;
     };
   })(this);
   return this;

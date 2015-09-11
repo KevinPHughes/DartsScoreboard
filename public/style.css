@@ -25,6 +25,14 @@ nav ul li {
   margin-right: 1em;
   font-size: 1.5em;
 }
+nav ul li.undo {
+  margin-top: 2em;
+  margin-bottom: .5em;
+}
+nav .alert {
+  margin-top: 1em;
+  text-align: center;
+}
 .footer {
   text-align: center;
 }

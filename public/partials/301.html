@@ -1,25 +1,29 @@
 <div class="container-fluid" ng-controller="301Controller as ctrl">
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-2">
             <nav>
-                <ul class="nav nav-tabs nav-stacked affix">
+                <ul class="nav nav-stacked affix">
                     <li ng-class="{turn: ctrl.activePlayer === 1}">Player 1: {{ctrl.points[1]}}</li>
+                    <li ng-show="ctrl.activePlayer == 1"> Round {{ctrl.round}}</li>
                     <li ng-show="ctrl.activePlayer == 1"> {{ctrl.shotsLeft}} shot<span ng-show="ctrl.shotsLeft != 1">s</span> left</li>
-                    <li ng-show="ctrl.activePlayer == 1">
-                        <button class="btn btn-default btn-block btn-danger" ng-click="ctrl.endTurn()">End Turn</button>
-                    </li>
                     <li>
                         <div ng-repeat="alert in ctrl.alerts[1] track by $index" class="alert alert-warning" role="alert">
                             {{alert}}
                         </div>
+                    </li>
+                    <li ng-show="ctrl.activePlayer == 1">
+                        <button class="btn btn-default btn-block btn-success" ng-click="ctrl.endTurn()">End Turn</button>
+                    </li>
+                    <li class="undo" ng-show="ctrl.activePlayer == 1">
+                        <button class="btn btn-default btn-block btn-danger btn-xs" ng-click="ctrl.undoShot()">Undo last point</button>
                     </li>
                 </ul>
             </nav>
 
         </div>
 
-        <div class="col-md-10">
-            <figure style="text-align: center">
+        <div class="col-md-8">
+            <figure>
                 <svg id="dartboard" version="1.1" x="0px" y="0px" style="width: 100%; height: auto;" viewBox="0 0 787 774" enable-background="new 0 0 787 774">
                     <g id="areas">
                         <g id="s">
@@ -100,15 +104,22 @@
             </figure>
         </div>
 
-        <div class="col-md-1">
+        <div class="col-md-2">
             <nav>
-                <ul class="nav nav-tabs nav-stacked affix">
-                    <li role="presentation" ng-class="{turn: ctrl.activePlayer === 2}">Player 2: {{ctrl.points[2]}}</li>
-                    <li role="presentation" ng-show="ctrl.activePlayer == 2"> {{ctrl.shotsLeft}} shot<span ng-show="ctrl.shotsLeft != 1">s</span> left</li>
+                <ul class="nav nav-stacked affix">
+                    <li ng-class="{turn: ctrl.activePlayer === 2}">Player 2: {{ctrl.points[2]}}</li>
+                    <li ng-show="ctrl.activePlayer == 2"> Round {{ctrl.round}}</li>
+                    <li ng-show="ctrl.activePlayer == 2"> {{ctrl.shotsLeft}} shot<span ng-show="ctrl.shotsLeft != 1">s</span> left</li>
+                    <li ng-show="ctrl.activePlayer == 2">
+                        <button class="btn btn-default btn-block btn-success" ng-click="ctrl.endTurn()">End Turn</button>
+                    </li>
                     <li>
                         <div ng-repeat="alert in ctrl.alerts[2] track by $index" class="alert alert-warning" role="alert">
                             {{alert}}
                         </div>
+                    </li>
+                    <li class="undo" ng-show="ctrl.activePlayer == 2">
+                        <button class="btn btn-default btn-danger btn-xs" ng-click="ctrl.undoShot()">Undo last point</button>
                     </li>
                 </ul>
             </nav>
